@@ -64,11 +64,39 @@ WAF signatures in response headers: `cf-ray` = Cloudflare, `AkamaiGHost` = Akama
 
 See [references/diagnostic.md](references/diagnostic.md) for the full troubleshooting guide.
 
+## Cookie Persistence
+
+Cookies are saved to `~/.browser-curl/cookies.txt` by default. This preserves WAF clearance cookies (e.g., `cf_clearance`) across requests.
+
+| Flag | Effect |
+|------|--------|
+| `--no-cookies` | Disable automatic cookie persistence |
+| `--clear-cookies` | Remove the cookie jar file |
+| `--cookie-jar PATH` | Use a custom cookie jar path |
+
+## Chrome Version Override
+
+Use `--chrome-version N` to compute the correct GREASE brand and User-Agent for any Chrome version:
+
+```bash
+bash browser_curl.sh --chrome-version 146 https://example.com
+```
+
+## Windows / PowerShell
+
+Use `browser_curl.ps1` on Windows (requires `curl.exe` on PATH):
+
+```powershell
+.\browser_curl.ps1 https://example.com
+.\browser_curl.ps1 -Diagnose https://example.com
+.\browser_curl.ps1 -ChromeVersion 146 -NoCookies https://example.com
+```
+
 ## Limitations
 
 - **JS challenges** and **behavioral analysis** require a real browser
 - **TLS fingerprint** differs without `curl-impersonate`
-- **GREASE brand** pinned to Chrome 145 — see [references/grease.md](references/grease.md) to update
+- **GREASE brand** defaults to Chrome 145 — use `--chrome-version N` to switch
 - **HTTP/2 framing** differs from Chrome (`m:s:a:p` vs `m:a:s:p`) — not fixable with stock curl
 
 ## References
